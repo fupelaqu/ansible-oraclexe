@@ -1,0 +1,16 @@
+---
+
+    - stat: path=/tmp/Disk1/oracle-xe_11.2.0-2_amd64.deb
+      register: deb
+    - stat: path=/etc/init.d/oracle-xe
+      register: oracle
+    - include: oracle-xe-rpm2deb.yml
+      when: (not deb.stat.exists) and (not oracle.stat.exists)
+    - include: oracle-xe-install.yml
+      when: (not oracle.stat.exists)
+    - stat: path=/etc/default/oracle-xe
+      register: conf
+    - include: oracle-xe-configure.yml
+      when: (not conf.stat.exists) or (oracle_reconfigure)
+    - name: restart oracle-xe
+      service: name=oracle-xe state=restarted

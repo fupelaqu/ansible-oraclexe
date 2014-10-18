@@ -1,0 +1,7 @@
+---
+
+  oracle_http_port: 8080
+  oracle_listener_port: 1521
+  oracle_system_pwd: sysadmin
+  oracle_start_boot: y
+  oracle_reconfigure: true

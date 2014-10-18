@@ -1,0 +1,9 @@
+---
+
+  - template: src=oracle-xe-conf.j2 dest=/tmp/oracle-xe.conf owner=root group=root mode=0755
+  - name: stop oracle-xe
+    service: name=oracle-xe state=stopped
+  - name: remove previous configuration
+    file: path=/etc/default/oracle-xe state=absent
+  - name: configure oracle-xe
+    shell: /etc/init.d/oracle-xe configure < /tmp/oracle-xe.conf >> /tmp/oracle-xe.log
