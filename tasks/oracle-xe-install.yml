@@ -10,9 +10,9 @@
     - name: create /var/lock/subsys
       file: path=/var/lock/subsys state=directory group=root owner=root
     - name: chkconfig
-      copy: src=files/chkconfig dest=/sbin/chkconfig owner=root group=root mode=0755
+      copy: src=chkconfig dest=/sbin/chkconfig owner=root group=root mode=0755
     - name: /dev/shm as tmpfs
-      copy: src=files/S01shm_load dest=/etc/rc2.d/S01shm_load owner=root group=root mode=0755
+      copy: src=S01shm_load dest=/etc/rc2.d/S01shm_load owner=root group=root mode=0755
     - name: installing oracle xe
       apt: deb=/tmp/Disk1/oracle-xe_11.2.0-2_amd64.deb state=installed
     - name: reboot

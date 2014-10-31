@@ -11,6 +11,7 @@
     - stat: path=/etc/default/oracle-xe
       register: conf
     - include: oracle-xe-configure.yml
-      when: (not conf.stat.exists) or (oracle_reconfigure)
+      when: (not conf.stat.exists) or (oracle_reconfigure == 'yes')
     - name: restart oracle-xe
       service: name=oracle-xe state=restarted
+      when: (not oracle.stat.exists) or (not conf.stat.exists) or (oracle_reconfigure == 'yes')
