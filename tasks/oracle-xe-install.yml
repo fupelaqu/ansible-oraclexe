@@ -15,5 +15,16 @@
       copy: src=S01shm_load dest=/etc/rc2.d/S01shm_load owner=root group=root mode=0755
     - name: installing oracle xe
       apt: deb=/tmp/Disk1/oracle-xe_11.2.0-2_amd64.deb state=installed
-    - name: reboot
-      shell: /sbin/reboot
+    - name: Reboot instance
+      command: /sbin/shutdown -r now
+      register: reboot_result
+    - name: Wait for instance to come online
+      sudo: false
+      local_action:
+        module: wait_for
+        host: "{{ ansible_ssh_host|default(inventory_hostname) }}"
+        port: "{{ ansible_ssh_port|default(ssh_port) }}"
+        delay: 30
+        timeout: 600
+        state: started
+
