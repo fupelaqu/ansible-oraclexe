@@ -1,0 +1,37 @@
+---
+
+  - file: path=/tmp/test state=directory owner=oracle group=dba
+
+  - name: install required packages for Debian tests
+    apt: name={{item}} state=present
+    with_items:
+      - sudo
+    when: ansible_os_family == "Debian"
+
+  - name: install required packages for RedHat tests
+    yum: name={{item}} disable_gpg_check=yes state=present
+    with_items:
+      - sudo
+    when: ansible_os_family == "RedHat"
+
+  - name: install required packages for Suse tests
+    zypper: name={{item}} disable_gpg_check=yes state=present
+    with_items:
+      - sudo
+    when: ansible_os_family == "Suse"
+
+  # Create test schema
+  - name: copy TEST oracle sql scripts
+    copy: src=test/sql dest=/tmp/test/ owner=oracle group=dba mode=0500
+    register: test_sql_scripts
+  - name: copy TEST oracle user sql script
+    template: src=user.j2 dest=/tmp/test/sql/user.sql owner=oracle group=dba mode=0500
+    register: test_user_sql_script
+  - name: copy TEST oracle sh script
+    template: src=oracle-test.j2 dest=/tmp/test/oracle.sh owner=oracle group=dba mode=0500
+    register: test_schema_script
+  - name: create TEST oracle schema
+    shell: /tmp/test/oracle.sh chdir=/tmp/test
+    sudo_user: oracle
+    register: execute_test_schema_script
+    when: test_sql_scripts|changed or test_user_sql_script|changed or test_schema_script|changed

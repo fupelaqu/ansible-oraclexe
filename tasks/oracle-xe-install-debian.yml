@@ -1,0 +1,28 @@
+---
+
+  - stat: path=/tmp/oracle-xe_11.2.0-2_amd64.deb
+    register: deb
+
+  - include: oracle-xe-rpm2deb.yml
+    when: not deb.stat.exists
+
+  - name: install libaio1, bc
+    apt: name={{item}} state=latest
+    with_items:
+      - libaio1
+      - bc
+
+  - name: setup awk the redhat way
+    file: src=/usr/bin/awk path=/bin/awk state=link
+
+  - name: create /var/lock/subsys
+    file: path=/var/lock/subsys state=directory group=root owner=root
+
+  - name: chkconfig
+    copy: src=debian/chkconfig dest=/sbin/chkconfig owner=root group=root mode=0755
+
+  - name: /dev/shm as tmpfs
+    copy: src=debian/S01shm_load dest=/etc/rc2.d/S01shm_load owner=root group=root mode=0755
+
+  - name: installing oracle xe
+    apt: deb=/tmp/oracle-xe_11.2.0-2_amd64.deb state=installed

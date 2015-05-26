@@ -3,9 +3,7 @@
     - name: install unzip, alien
       apt: name={{item}} state=present update_cache=yes
       with_items:
-        - unzip
-        - alien    
-    - name: unarchive oracle-xe-11
-      unarchive: src=oracle-xe-11.2.0-1.0.x86_64.rpm.zip dest=/tmp owner=root group=root mode=0755
+        - alien
+
     - name: oracle-xe-11 rpm to debian
-      shell: alien --to-deb --scripts oracle-xe-11.2.0-1.0.x86_64.rpm chdir=/tmp/Disk1
+      shell: alien --to-deb --scripts oracle-xe-11.2.0-1.0.x86_64.rpm chdir=/tmp

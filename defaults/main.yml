@@ -4,4 +4,13 @@
   oracle_listener_port: 1521
   oracle_system_pwd: sysadmin
   oracle_start_boot: y
-  oracle_reconfigure: yes
+  oracle_reconfigure: no
+
+  oracle_sid: XE
+  oracle_test_pwd: changeit
+
+  ssh_port: 22
+  swapfile_size: 2048
+  swapfile_location: /swapfile
+
+  docker: no

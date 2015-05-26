@@ -1,17 +1,34 @@
 ---
 
-    - stat: path=/tmp/Disk1/oracle-xe_11.2.0-2_amd64.deb
-      register: deb
-    - stat: path=/etc/init.d/oracle-xe
-      register: oracle
-    - include: oracle-xe-rpm2deb.yml
-      when: (not deb.stat.exists) and (not oracle.stat.exists)
-    - include: oracle-xe-install.yml
-      when: (not oracle.stat.exists)
-    - stat: path=/etc/default/oracle-xe
-      register: conf
-    - include: oracle-xe-configure.yml
-      when: (not conf.stat.exists) or (oracle_reconfigure == 'yes')
-    - name: restart oracle-xe
-      service: name=oracle-xe state=restarted
-      when: (not oracle.stat.exists) or (not conf.stat.exists) or (oracle_reconfigure == 'yes')
+  - stat: path=/etc/init.d/oracle-xe
+    register: oracle
+  - stat: path={{swapfile_location}}
+    register: swap
+  - include: oracle-xe-swap.yml
+    when: (docker == 'no') and (not oracle.stat.exists) and (not swap.stat.exists)
+  - include: oracle-xe-install.yml
+    when: (not oracle.stat.exists)
+  - stat: path=/etc/sysconfig/oracle-xe
+    register: conf
+  - include: oracle-xe-configure.yml
+    when: (not conf.stat.exists) or (oracle_reconfigure == 'yes')
+  - name: restart oracle-xe
+    service: name=oracle-xe state=restarted
+    when: (not oracle.stat.exists) or (not conf.stat.exists) or (oracle_reconfigure == 'yes')
+
+  - stat: path=/u01/app/oracle/.bash_profile
+    register: bash_profile
+  - file: path=/u01/app/oracle/.bash_profile owner=oracle group=dba state=touch
+    when: (not bash_profile.stat.exists)
+  - lineinfile: dest=/u01/app/oracle/.bash_profile line="export ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe" state=present
+  - lineinfile: dest=/u01/app/oracle/.bash_profile line="export ORACLE_SID=XE" state=present
+  - lineinfile: dest=/u01/app/oracle/.bash_profile line="export ORACLE_BASE=/u01/app/oracle" state=present
+  - lineinfile: dest=/u01/app/oracle/.bash_profile line="export PATH=$ORACLE_HOME/bin:$PATH" state=present
+
+  - stat: path=/u01/app/oracle/.bashrc
+    register: bashrc
+  - file: path=/u01/app/oracle/.bashrc owner=oracle group=dba state=touch
+    when: (not bashrc.stat.exists)
+  - lineinfile: dest=/u01/app/oracle/.bashrc line="source ~/.bash_profile" state=present
+
+  - include: oracle-xe-test.yml

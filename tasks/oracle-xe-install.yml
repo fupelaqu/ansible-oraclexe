@@ -1,30 +1,24 @@
 ---
 
-    - name: install libaio1, bc
-      apt: name={{item}} state=latest
-      with_items:
-        - libaio1
-        - bc    
-    - name: setup awk the redhat way
-      file: src=/usr/bin/awk path=/bin/awk state=link
-    - name: create /var/lock/subsys
-      file: path=/var/lock/subsys state=directory group=root owner=root
-    - name: chkconfig
-      copy: src=chkconfig dest=/sbin/chkconfig owner=root group=root mode=0755
-    - name: /dev/shm as tmpfs
-      copy: src=S01shm_load dest=/etc/rc2.d/S01shm_load owner=root group=root mode=0755
-    - name: installing oracle xe
-      apt: deb=/tmp/Disk1/oracle-xe_11.2.0-2_amd64.deb state=installed
-    - name: Reboot instance
-      command: /sbin/shutdown -r now
-      register: reboot_result
-    - name: Wait for instance to come online
-      sudo: false
-      local_action:
-        module: wait_for
-        host: "{{ ansible_ssh_host|default(inventory_hostname) }}"
-        port: "{{ ansible_ssh_port|default(ssh_port) }}"
-        delay: 30
-        timeout: 600
-        state: started
+  - name: add group dba
+    group: name=dba system=yes state=present
 
+  - file: path=/u01/app state=directory
+
+  - name: add user oracle
+    user: name=oracle system=yes group=dba home=/u01/app/oracle shell=/bin/bash state=present
+
+  - file: path=/u01/app/oracle owner=oracle group=dba recurse=yes state=directory
+
+  - copy: src={{item}} dest=/tmp/ owner=root group=root mode=0755
+    with_fileglob:
+      - oracle-xe-*.rpm
+
+  - include: oracle-xe-install-debian.yml
+    when: ansible_os_family == "Debian"
+
+  - include: oracle-xe-install-redhat.yml
+    when: ansible_os_family == "RedHat"
+
+#  - include: oracle-xe-install-suse.yml
+#    when: ansible_os_family == "Suse"

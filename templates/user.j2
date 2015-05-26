@@ -1,0 +1,15 @@
+set echo on
+spool ./CreateTESTUser.log
+
+DROP USER TEST CASCADE;
+
+-- --------------------------------------
+-- Utilisateur : TEST
+-- Proprietaire de tout le schema
+-- --------------------------------------
+CREATE USER TEST IDENTIFIED BY {{oracle_test_pwd}} DEFAULT TABLESPACE TBS_TEST_DATA_M TEMPORARY TABLESPACE TBS_TEST_TEMPORAIRE;
+
+GRANT TEST_ROLE, UNLIMITED TABLESPACE TO TEST;
+
+spool off
+exit 0
