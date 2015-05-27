@@ -1,9 +1,23 @@
 ---
 
   - template: src=oracle-xe-conf.j2 dest=/tmp/oracle-xe.conf owner=root group=root mode=0755
+
   - name: stop oracle-xe
     service: name=oracle-xe state=stopped
+
+  - name: Configure instance
+    copy: src={{item}} dest=/u01/app/oracle/product/11.2.0/xe/config/scripts/ owner=oracle group=dba mode=0755
+    with_fileglob:
+      - config/*.ora
+
   - name: remove previous configuration
-    file: path=/etc/default/oracle-xe state=absent
+    file: path=/etc/sysconfig/oracle-xe state=absent
+
   - name: configure oracle-xe
     shell: /etc/init.d/oracle-xe configure < /tmp/oracle-xe.conf >> /tmp/oracle-xe.log
+
+  - shell: firewall-cmd --permanent --add-port=1521/tcp
+    when: (docker == 'no') and ansible_os_family == "RedHat"
+
+  - service: name=firewalld state=restarted
+    when: (docker == 'no') and ansible_os_family == "RedHat"

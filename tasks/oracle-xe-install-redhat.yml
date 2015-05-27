@@ -1,0 +1,14 @@
+---
+
+  - name: install required packages for RedHat
+    yum: name={{item}} state=present
+    with_items:
+      - bc
+      - net-tools
+      - libaio
+
+  - name: install oracle xe for Redhat
+    yum: name={{item}} disable_gpg_check=yes disablerepo=* state=installed
+    with_items:
+      - /tmp/oracle-xe-11.2.0-1.0.x86_64.rpm
+
