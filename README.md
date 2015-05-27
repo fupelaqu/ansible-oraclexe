@@ -5,7 +5,7 @@ ansible-oraclexe
 
 This is an [Ansible](http://www.ansibleworks.com/) playbook for [Oracle XE 11g](http://www.oracle.com/technetwork/products/express-edition/overview/index.html). You can use it by itself or as part of a larger playbook customized for your local environment.
 
-It has been tested with ubuntu-14.04, fedora-21 and within [Docker](https://www.docker.com/)
+It has been tested with ubuntu-14.04, fedora-21 and may be used to create ansible oraclexe base images for [Docker](https://www.docker.com/) ([fupelaqu/ansible-oraclexe-docker-base](https://github.com/fupelaqu/ansible-oraclexe-docker-base))
 
 
 Prerequisites
@@ -60,9 +60,11 @@ Example `my-master-playbook-main.yml`:
     - vars/my-vars.yml
 ```
 
-## Use with docker
+## Ansible oraclexe base images for docker 
 
-Example `site.yml`:
+[Exemple for ubuntu-14.04 ansible base image](https://github.com/fupelaqu/ansible-oraclexe-docker-base/tree/master/ubuntu-14.04)
+
+`site.yml`:
 
 ```
 ---
@@ -77,7 +79,7 @@ Example `site.yml`:
       - ansible-oraclexe
 ```
 
-Example `start.sh`: [madhead/docker-oracle-xe](https://github.com/madhead/docker-oracle-xe/blob/master/config/start.sh)
+`start.sh`: [madhead/docker-oracle-xe](https://github.com/madhead/docker-oracle-xe/blob/master/config/start.sh)
 
 ```
 #!/bin/bash
@@ -99,7 +101,7 @@ done;
 
 ```
 
-Example `Dockerfile`: [ansible-docker-base](https://github.com/ansible/ansible-docker-base)
+`Dockerfile`: [ansible-docker-base](https://github.com/ansible/ansible-docker-base)
 
 ```
 FROM ansible/ubuntu14.04-ansible
