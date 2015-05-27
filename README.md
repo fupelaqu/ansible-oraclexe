@@ -60,9 +60,11 @@ Example `my-master-playbook-main.yml`:
     - vars/my-vars.yml
 ```
 
-## Use with docker
+## [Ansible oraclexe base images for docker](https://github.com/fupelaqu/ansible-oraclexe-docker-base) 
 
-Example `site.yml`:
+[Exemple for ubuntu-14.04 ansible base image](https://github.com/fupelaqu/ansible-oraclexe-docker-base/tree/master/ubuntu-14.04)
+
+`site.yml`:
 
 ```
 ---
@@ -77,7 +79,7 @@ Example `site.yml`:
       - ansible-oraclexe
 ```
 
-Example `start.sh`: [madhead/docker-oracle-xe](https://github.com/madhead/docker-oracle-xe/blob/master/config/start.sh)
+`start.sh`: [madhead/docker-oracle-xe](https://github.com/madhead/docker-oracle-xe/blob/master/config/start.sh)
 
 ```
 #!/bin/bash
@@ -99,7 +101,7 @@ done;
 
 ```
 
-Example `Dockerfile`: [ansible-docker-base](https://github.com/ansible/ansible-docker-base)
+`Dockerfile`: [ansible-docker-base](https://github.com/ansible/ansible-docker-base)
 
 ```
 FROM ansible/ubuntu14.04-ansible
