@@ -20,6 +20,9 @@
       - sudo
     when: ansible_os_family == "Suse"
 
+  - lineinfile: dest=/etc/sudoers state=absent regexp='^Defaults(\s*)requiretty' validate='visudo -cf %s'
+    when: ansible_distribution == 'CentOS'
+
   # Create test schema
   - name: copy TEST oracle sql scripts
     copy: src=test/sql dest=/tmp/test/ owner=oracle group=dba mode=0500
