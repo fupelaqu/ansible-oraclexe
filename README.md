@@ -62,7 +62,7 @@ Example `my-master-playbook-main.yml`:
 
 ## Ansible oraclexe base images for docker 
 
-[Exemple for ubuntu-14.04 ansible base image](https://github.com/fupelaqu/ansible-oraclexe-docker-base/tree/master/ubuntu-14.04)
+[Exemple for ubuntu-14.04 ansible base image](https://github.com/fupelaqu/ansible-oraclexe-docker-base)
 
 `site.yml`:
 
