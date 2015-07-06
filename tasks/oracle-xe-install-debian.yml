@@ -1,5 +1,8 @@
 ---
 
+  - template: src=apt.conf dest=/etc/apt/apt.conf mode=644
+    when: proxy
+
   - stat: path=/tmp/oracle-xe_11.2.0-2_amd64.deb
     register: deb
 

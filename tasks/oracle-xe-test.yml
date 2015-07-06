@@ -10,15 +10,23 @@
 
   - name: install required packages for RedHat tests
     yum: name={{item}} disable_gpg_check=yes state=present
+    environment: proxy_env
     with_items:
       - sudo
-    when: ansible_os_family == "RedHat"
+    when: proxy and ansible_os_family == "RedHat"
 
-  - name: install required packages for Suse tests
-    zypper: name={{item}} disable_gpg_check=yes state=present
+  - name: install required packages for RedHat tests
+    yum: name={{item}} disable_gpg_check=yes state=present
     with_items:
       - sudo
-    when: ansible_os_family == "Suse"
+    when: not proxy and ansible_os_family == "RedHat"
+
+#  - name: install required packages for Suse tests
+#    zypper: name={{item}} disable_gpg_check=yes state=present
+#    environment: proxy_env
+#    with_items:
+#      - sudo
+#    when: ansible_os_family == "Suse"
 
   - lineinfile: dest=/etc/sudoers state=absent regexp='^Defaults(\s*)requiretty' validate='visudo -cf %s'
     when: ansible_distribution == 'CentOS'

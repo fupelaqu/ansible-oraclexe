@@ -32,3 +32,4 @@
   - lineinfile: dest=/u01/app/oracle/.bashrc line="source ~/.bash_profile" state=present
 
   - include: oracle-xe-test.yml
+    when: oracle-xe-test
