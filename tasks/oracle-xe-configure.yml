@@ -17,7 +17,7 @@
     shell: /etc/init.d/oracle-xe configure < /tmp/oracle-xe.conf >> /tmp/oracle-xe.log
 
   - shell: firewall-cmd --permanent --add-port=1521/tcp
-    when: (docker == 'no') and ansible_os_family == "RedHat"
+    when: (not docker or docker == 'no') and ansible_os_family == "RedHat"
 
   - service: name=firewalld state=restarted
-    when: (docker == 'no') and ansible_os_family == "RedHat"
+    when: (not docker or docker == 'no') and ansible_os_family == "RedHat"
