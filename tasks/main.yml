@@ -5,7 +5,7 @@
   - stat: path={{swapfile_location}}
     register: swap
   - include: oracle-xe-swap.yml
-    when: (docker == 'no') and (not oracle.stat.exists) and (not swap.stat.exists)
+    when: (not docker or docker == 'no') and (not oracle.stat.exists) and (not swap.stat.exists)
   - include: oracle-xe-install.yml
     when: (not oracle.stat.exists)
   - stat: path=/etc/sysconfig/oracle-xe
